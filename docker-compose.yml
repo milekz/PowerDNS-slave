@@ -1,0 +1,41 @@
+version: "2.1"
+
+services:
+  pdns-server:
+    image: milekz/docker-powerdns
+    hostname: ${PDNS_HOST}
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    networks:
+      - default
+#    command: --api=yes --api-key=${PDNS_API_KEY} --webserver-address=0.0.0.0 --webserver-allow-from=0.0.0.0/0
+    environment:
+      - PGSQL_HOST=${PDNS_PGDB_HOST}
+      - PGSQL_USER=${PDNS_PGDB_USER}
+      - PGSQL_PASS=${PDNS_PGDB_PASSWORD}
+      - PGSQL_DB=${PDNS_PGDB_DBNAME}
+#      - PDNS_API_KEY=${PDNS_API_KEY}
+#      - PDNS_WEBSERVER_ALLOW_FROM=${PDNS_WEBSERVER_ALLOW_FROM}
+    depends_on:
+      - pdns-postgres
+
+  pdns-postgres:
+     image: postgres:10-alpine
+     hostname: ${PDNS_PGDB_HOST}
+     container_name: ${PDNS_PGDB_HOST}
+     volumes:
+        - ./pg_entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
+     restart: always
+     ports:
+        - "5432:5432"
+     environment:
+        - PDNS_PGDB_REPLICA_PASSWORD=${PDNS_PGDB_REPLICA_PASSWORD}
+        - PDNS_PGDB_REPLICA_USERNAME=${PDNS_PGDB_REPLICA_USERNAME}
+        - PDNS_PGDB_REPLICA_HOST=${PDNS_PGDB_REPLICA_HOST}
+networks:
+  default:
+
+volumes:
+  powerdns-postgres-data:
+  
