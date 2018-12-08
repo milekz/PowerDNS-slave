@@ -3,8 +3,6 @@
 cp -f /docker-entrypoint-initdb.d/20-schema.xxx /tmp/20-schema.yyy
 cp -f /docker-entrypoint-initdb.d/40-schema.xxx /tmp/40-schema.yyy
 
-
-
 sed -i "s/PGDB_USER/$PGSQL_USER/g" /tmp/20-schema.yyy
 sed -i "s/PGDB_PASSWORD/$PGSQL_PASS/g" /tmp/20-schema.yyy
 sed -i "s/PGDB_NAME/$PGSQL_DBNAME/g" /tmp/20-schema.yyy
@@ -21,10 +19,8 @@ psql -U ${PGSQL_USER} ${PGSQL_DBNAME} < /docker-entrypoint-initdb.d/30-schema.xx
 psql ${PGSQL_DBNAME} < /tmp/40-schema.yyy
 
 
-#unset PGSQL_PASS
-#export PGSQL_PASS=xxxxxxxxxxxxxxxxxxx
-
-#rm /tmp/20-schema.yyy
+rm /tmp/20-schema.yyy
+rm /tmp/40-schema.yyy
 
 
  
