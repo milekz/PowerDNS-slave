@@ -1,0 +1,4 @@
+create user PGDB_USER with password 'PGDB_PASSWORD';
+CREATE DATABASE PGDB_NAME OWNER PGDB_USER ;
+
+
