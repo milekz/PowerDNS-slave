@@ -12,6 +12,10 @@ sed -i "s/PDNS_PGDB_REPLICA_PASSWORD/$PDNS_PGDB_REPLICA_PASSWORD/g" /tmp/40-sche
 sed -i "s/PDNS_PGDB_REPLICA_USERNAME/$PDNS_PGDB_REPLICA_USERNAME/g" /tmp/40-schema.yyy
 sed -i "s/PDNS_PGDB_REPLICA_DBNAME/$PDNS_PGDB_REPLICA_DBNAME/g" /tmp/40-schema.yyy
 
+RANDOMHASH=$(date +%s | md5sum | awk '{print $1}')
+
+sed -i "s/RANDOMHASH/$RANDOMHASH/g" /tmp/40-schema.yyy
+
 psql  < /tmp/20-schema.yyy
 
 psql -U ${PGSQL_USER} ${PGSQL_DBNAME} < /docker-entrypoint-initdb.d/30-schema.xxx

@@ -10,6 +10,7 @@ services:
     networks:
       - default
 #    command: --api=yes --api-key=${PDNS_API_KEY} --webserver-address=0.0.0.0 --webserver-allow-from=0.0.0.0/0
+    restart: always
     environment:
       - PGSQL_HOST=${PDNS_PGDB_HOST}
       - PGSQL_USER=${PDNS_PGDB_USER}
@@ -21,21 +22,19 @@ services:
       - pdns-postgres
 
   pdns-postgres:
-     image: postgres:10-alpine
+     image: postgres:11-alpine
      hostname: ${PDNS_PGDB_HOST}
      container_name: ${PDNS_PGDB_HOST}
      volumes:
         - ./db_schema:/docker-entrypoint-initdb.d/
-#        - ./pg_entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
      restart: always
-     ports:
-        - "5432:5432"
+#     ports:
+#        - "5432:5432"
      environment:
         - POSTGRES_PASSWORD=${PG_MASTER_PASSWORD}
         - PGSQL_DBNAME=${PDNS_PGDB_NAME}
         - PGSQL_USER=${PDNS_PGDB_USER}
         - PGSQL_PASS=${PDNS_PGDB_PASSWORD}
-                        
 #
         - PDNS_PGDB_REPLICA_PASSWORD=${PDNS_PGDB_REPLICA_PASSWORD}
         - PDNS_PGDB_REPLICA_USERNAME=${PDNS_PGDB_REPLICA_USERNAME}
